@@ -1,11 +1,11 @@
 import React, { useEffect, useState, } from 'react';
-import { StyleSheet, Text, View, Image, TouchableOpacity, AsyncStorage, TextInput, Button } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity, TextInput, Button, Alert } from 'react-native';
 import  Navigation from './components/Navigation';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import OnboardingScreen from './screens/OnboardingScreen';
 import Home from './screens/Home';
 import { NavigationContainer } from '@react-navigation/native';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 
@@ -38,11 +38,11 @@ return(
           placeholder="One Time Password">
         </TextInput>
         <Button
-          title="Send"
+          title="Submit"
           style={styles.button}
           onPress={async () => {
-            await fetch(
-              'https://dev.stedi.me/twofactorlogin/',
+            loginResponse = await fetch(
+              'https://dev.stedi.me/twofactorlogin',
               {
               method: 'POST',
               headers: {
@@ -53,11 +53,18 @@ return(
                 "oneTimePassword": otp
               })
               }
-            ).then((res) => {
-              if (res.status != 401) {
-                setIsLoggedIn(true);
-              }
-            })
+            )
+            
+            if (loginResponse.status == 200) {
+              const sessionToken = await loginResponse.text();
+              console.log('Session Token', sessionToken);
+              await AsyncStorage.setItem('sessionToken', sessionToken);
+              setIsLoggedIn(true);
+            } else {
+              console.log("Tolen response status", loginResponse.status);
+              Alert.alert("Warning, Error Created With HTTP Code", loginResponse.status)
+            }
+          
           }}
         />
       </View>

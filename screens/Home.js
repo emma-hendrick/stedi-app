@@ -4,16 +4,19 @@ import {FontAwesome5} from '@expo/vector-icons';
 import quotes from '../data/quote.json';
 import { Card, CardTitle, CardContent} from 'react-native-material-cards';
 import { LineChart} from 'react-native-chart-kit';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 const Home = (props) => {
   const token = useRef("");
   const [score, setScore] = useState(0);
-  useEffect(()=>{ todayScore();},[]);
+  useEffect(()=>{ 
+    todayScore();
+  },[]);
 
 //today score
 const todayScore = async() =>{
+  const loginToken = await AsyncStorage.getItem('sessionToken');
   let scoreObject ={};
   try{
     const tokenResponse = await fetch('https://dev.stedi.me/login',{
