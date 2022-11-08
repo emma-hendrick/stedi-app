@@ -19,6 +19,30 @@ const App = () =>{
   const [textSent, setTextSent] = React.useState(false);
   const [homeTodayScore, setHomeTodayScore] = React.useState(0);
 
+  useEffect(() => {
+    const getSessionToken = async() => {
+      const sessionToken = await AsyncStorage.getItem('sessionToken');
+      console.log('token from storage', sessionToken);
+
+      const validateResponse = await fetch('https://dev.stedi.me/validate/' + sessionToken);
+
+      if (validateResponse.status == 200) { // The token is valid
+        const userEmail = await validateResponse.text();
+        await AsyncStorage.setItem('userName', userEmail);
+        console.log('userEmail', userEmail);
+        setIsLoggedIn(true);
+        setFirstLaunch(false);
+      }
+      else {
+        setIsLoggedIn(false);
+        setTextSent(false);
+        Alert.alert('Communication Error', 'Server responded to send text with status: ' + validateResponse.status);
+      }
+    }
+
+    getSessionToken();
+  })
+
    if (isFirstLaunch == true){
 return(
   <OnboardingScreen setFirstLaunch={setFirstLaunch}/>
@@ -38,10 +62,10 @@ return(
           placeholder="One Time Password">
         </TextInput>
         <Button
-          title="Submit"
+          title="Login"
           style={styles.button}
           onPress={async () => {
-            loginResponse = await fetch(
+            const loginResponse = await fetch(
               'https://dev.stedi.me/twofactorlogin',
               {
               method: 'POST',
@@ -53,7 +77,7 @@ return(
                 "oneTimePassword": otp
               })
               }
-            )
+            );
             
             if (loginResponse.status == 200) {
               const sessionToken = await loginResponse.text();
@@ -61,8 +85,10 @@ return(
               await AsyncStorage.setItem('sessionToken', sessionToken);
               setIsLoggedIn(true);
             } else {
-              console.log("Tolen response status", loginResponse.status);
-              Alert.alert("Warning, Error Created With HTTP Code", loginResponse.status)
+              console.log("Token response status", loginResponse.status);
+              Alert.alert("Warning, Error Created With HTTP Code", loginResponse.status);
+              setIsLoggedIn(false);
+              setTextSent(false);
             }
           
           }}
@@ -85,7 +111,7 @@ return(
           title="Send"
           style={styles.button}
           onPress={async () => {
-            await fetch(
+            const sendTextResponse = await fetch(
               'https://dev.stedi.me/twofactorlogin/' + phoneNumber,
               {
               method: 'POST',
@@ -93,7 +119,15 @@ return(
                 'content-type' : 'application/text'
               }
               }
-            ).then(setTextSent(true))
+            );
+
+            if (sendTextResponse.status != 200) {
+              Alert.alert('Communication Error', 'Server responded to send text with status: ' + sendTextResponse.status);
+            }
+            else {
+              setTextSent(true)
+            }
+            
           }}
         />
       </View>

@@ -16,18 +16,17 @@ const Home = (props) => {
 
 //today score
 const todayScore = async() =>{
-  const loginToken = await AsyncStorage.getItem('sessionToken');
   let scoreObject ={};
   try{
-    const tokenResponse = await fetch('https://dev.stedi.me/login',{
-  method: 'POST',
-  body:JSON.stringify({
-    userName: "rom19010@byui.edu",
-    password:"Patricia2596@"
-  })
-});
+//     const tokenResponse = await fetch('https://dev.stedi.me/login',{
+//   method: 'POST',
+//   body:JSON.stringify({
+//     userName: "rom19010@byui.edu",
+//     password:"Patricia2596@"
+//   })
+// });
 
- token.current = await tokenResponse.text();
+ token.current = await AsyncStorage.getItem('sessionToken')
     const scoreResponse = await fetch('https://dev.stedi.me/riskscore/rom19010@byui.edu',{
     method:'GET',
     headers:{
@@ -59,7 +58,7 @@ const colorsToday = colors[day.getDay()];
 
   //date
   const date = new Date();   
-  const time = date.getTime(); // the timestamp, not neccessarely using UTC as current time
+  const time = date.getTime(); // the timestamp, not neccessarily using UTC as current time
   const julian_day = Math.floor((time / 86400000) - (date.getTimezoneOffset()/1440) + 2440587.5);
   const dayQuoteIndex = julian_day - 2459778;
   const quote = quotes[dayQuoteIndex].text;

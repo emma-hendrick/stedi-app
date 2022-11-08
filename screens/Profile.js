@@ -1,11 +1,10 @@
-
-import React from 'react';
+import React, { useEffect, useState, } from 'react';
 import { StyleSheet, Text, View, Image, SafeAreaView , Share, ScrollView, Button} from 'react-native';
 import { Card, CardTitle, CardContent} from 'react-native-material-cards';
 import BarChart from 'react-native-bar-chart';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 // import Share from 'react-native-share';
-
-
 
 // const data = [
 //   [70, 0],
@@ -21,6 +20,17 @@ import BarChart from 'react-native-bar-chart';
 // const horizontalData = ['S', 'M', 'T', 'W', 'T', 'F','S'];
 
 const Profile = (props) => {
+
+  const [userName, setUserName] = React.useState("");
+
+  useEffect(() => {
+    const getUserName = async() => {
+      setUserName(await AsyncStorage.getItem('userName'));
+    }
+
+    getUserName();
+  })
+
   const myCustomerShare = async() =>{
     const shareOptions = {
       message: 'This is a test'
@@ -48,7 +58,7 @@ elevation: 4}}>
      <CardContent>
      <Image style={{height: 100, width:100, borderRadius: 75}}
       source={require('../image/me.jpg')} />
-    <Text style={{marginTop:10,marginBottom:10,fontWeight: 'bold'}}>Sarah Romero</Text>
+    <Text style={{marginTop:10,marginBottom:10,fontWeight: 'bold'}}>{userName}</Text>
 
     <Text style={{marginTop:20,marginBottom:2}}>This Week's progress</Text>
 {/* <BarChart barColor='green' data={data} horizontalData={horizontalData} /> */}
