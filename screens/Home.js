@@ -26,8 +26,9 @@ const todayScore = async() =>{
 //   })
 // });
 
- token.current = await AsyncStorage.getItem('sessionToken')
-    const scoreResponse = await fetch('https://dev.stedi.me/riskscore/rom19010@byui.edu',{
+  const userEmail = await AsyncStorage.getItem('userName')
+  token.current = await AsyncStorage.getItem('sessionToken')
+    const scoreResponse = await fetch('https://dev.stedi.me/riskscore/' + userEmail,{
     method:'GET',
     headers:{
       'Content-Type': 'application/json',
