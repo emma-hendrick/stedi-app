@@ -67,7 +67,7 @@ const Profile = (props) => {
   if (profilePhoto == null) {
     return (
       <View style = {styles.container}>
-        <Camera style = {styles.camera} ref = {cameraRef} onCameraReady = {() => {setCameraReady(true)}}>
+        <Camera style = {styles.camera} type = {Camera.Constants.Type.front} ref = {cameraRef} onCameraReady = {() => {setCameraReady(true)}}>
           <View style = {styles.buttonContainer}>
             {cameraReady?<TouchableOpacity style = {styles.button} onPress = {async () => {
 
