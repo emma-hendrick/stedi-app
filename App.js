@@ -36,7 +36,12 @@ const App = () =>{
       else {
         setIsLoggedIn(false);
         setTextSent(false);
-        Alert.alert('Communication Error', 'Server responded to send text with status: ' + validateResponse.status);
+
+        if(sessionToken == null) {
+          // No message needed, the user just needs to login
+        } else {
+          Alert.alert('Communication Error', 'Server responded to send text with status: ' + validateResponse.status);
+        }
       }
     }
 
