@@ -55,9 +55,40 @@ return(
 );
   }else if (isLoggedIn) {
     return <Navigation setHomeTodayScore={setHomeTodayScore}/>
-  }else if (textSent) {
+  }else {
     return (
       <View>
+        <TextInput
+          value={phoneNumber}
+          onChangeText={setPhoneNumber}
+          style={styles.input}
+          keyboardType="phone-pad"
+          placeholderTextColor="#4251f5"
+          placeholder="Cell Phone">
+        </TextInput>
+        <Button
+          title="Send"
+          style={styles.button}
+          onPress={async () => {
+            const sendTextResponse = await fetch(
+              'https://dev.stedi.me/twofactorlogin/' + phoneNumber,
+              {
+              method: 'POST',
+              headers: {
+                'content-type' : 'application/text'
+              }
+              }
+            );
+
+            if (sendTextResponse.status != 200) {
+              Alert.alert('Communication Error', 'Server responded to send text with status: ' + sendTextResponse.status);
+            }
+            else {
+              setTextSent(true)
+            }
+            
+          }}
+        />
         <TextInput
           value={otp}
           onChangeText={setOtp}
@@ -96,43 +127,6 @@ return(
               setTextSent(false);
             }
           
-          }}
-        />
-      </View>
-    )
-  }
-  else{
-    return (
-      <View>
-        <TextInput
-          value={phoneNumber}
-          onChangeText={setPhoneNumber}
-          style={styles.input}
-          keyboardType="phone-pad"
-          placeholderTextColor="#4251f5"
-          placeholder="Cell Phone">
-        </TextInput>
-        <Button
-          title="Send"
-          style={styles.button}
-          onPress={async () => {
-            const sendTextResponse = await fetch(
-              'https://dev.stedi.me/twofactorlogin/' + phoneNumber,
-              {
-              method: 'POST',
-              headers: {
-                'content-type' : 'application/text'
-              }
-              }
-            );
-
-            if (sendTextResponse.status != 200) {
-              Alert.alert('Communication Error', 'Server responded to send text with status: ' + sendTextResponse.status);
-            }
-            else {
-              setTextSent(true)
-            }
-            
           }}
         />
       </View>
