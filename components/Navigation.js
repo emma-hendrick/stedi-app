@@ -45,7 +45,7 @@ const HomeStackScreen = (props) =>{
 }
 
 
-const CounterStackScreen = () =>{
+const CounterStackScreen = (props) =>{
     return(
      <Stack.Navigator
      screenOptions= {{
@@ -53,6 +53,7 @@ const CounterStackScreen = () =>{
         headerTintColor:'white'}}
      >
         <Stack.Screen name="Counter" component={Counter} options={{
+             setHomeTodayScore: props.setHomeTodayScore,
              headerTitleAlign: "center",
              headerTitleStyle:{
                fontWeight:'bold', 

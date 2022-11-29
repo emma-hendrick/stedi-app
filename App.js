@@ -49,7 +49,7 @@ return(
  
 );
   }else if (isLoggedIn) {
-    return <Navigation/>
+    return <Navigation setHomeTodayScore={setHomeTodayScore}/>
   }else if (textSent) {
     return (
       <View>

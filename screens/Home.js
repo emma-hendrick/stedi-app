@@ -26,7 +26,10 @@ const todayScore = async() =>{
 //   })
 // });
 
-  const userEmail = await AsyncStorage.getItem('userName')
+// await AsyncStorage.getItem('profilePhoto')
+// await AsyncStorage.removeItem('userName')
+// await AsyncStorage.removeItem('sessionToken')
+const userEmail = await AsyncStorage.getItem('userName')
   token.current = await AsyncStorage.getItem('sessionToken')
     const scoreResponse = await fetch('https://dev.stedi.me/riskscore/' + userEmail,{
     method:'GET',
